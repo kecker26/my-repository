@@ -1,0 +1,12 @@
+/* Grundlegendes Styling für die Web‑Version des Pacman‑Spiels */
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 2rem;
+  background-color: #fafafa;
+}
+
+h1 {
+  color: #333;
+}
