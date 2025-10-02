@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pacman HTML</title>
+<style>
+  canvas { background: black; display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<canvas id="game" width="560" height="620"></canvas>
+<script>
+const TILE_SIZE = 20;
+const WIDTH = 28 * TILE_SIZE;
+const HEIGHT = 31 * TILE_SIZE;
+const LEVEL = [
+    "############################",
+    "#............##............#",
+    "#.####.#####.##.#####.####.#",
+    "#o####.#####.##.#####.####o#",
+    "#.####.#####.##.#####.####.#",
+    "#..........................#",
+    "#.####.##.########.##.####.#",
+    "#.####.##.########.##.####.#",
+    "#......##....##....##......#",
+    "######.##### ## #####.######",
+    "     #.##### ## #####.#     ",
+    "     #.##          ##.#     ",
+    "     #.## ###--### ##.#     ",
+    "######.## #      # ##.######",
+    "      .   #      #   .      ",
+    "######.## #      # ##.######",
+    "     #.## ######## ##.#     ",
+    "     #.##          ##.#     ",
+    "     #.## ######## ##.#     ",
+    "######.## ######## ##.######",
+    "#............##............#",
+    "#.####.#####.##.#####.####.#",
+    "#o####.#####.##.#####.####o#",
+    "#...##................##...#",
+    "###.##.##.########.##.##.###",
+    "###.##.##.########.##.##.###",
+    "#......##....##....##......#",
+    "#.##########.##.##########.#",
+    "#..........................#",
+    "############################",
+];
+
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+
+class Entity {
+  constructor(x, y, color) {
+    this.x = x; // grid position
+    this.y = y;
+    this.color = color;
+    this.direction = {x: 0, y: 0};
+    this.nextDirection = {x: 0, y: 0};
+  }
+
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x * TILE_SIZE + TILE_SIZE/2, this.y * TILE_SIZE + TILE_SIZE/2, TILE_SIZE/2 - 2, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+
+class Ghost extends Entity {
+  constructor(x, y, color) {
+    super(x, y, color);
+    this.direction = {x: 1, y: 0};
+  }
+
+  update(walls) {
+    if (canMove(this.x + this.direction.x, this.y + this.direction.y, walls)) {
+      if (Math.random() < 0.1) {
+        this.direction = randomDirection(walls, this);
+      }
+    } else {
+      this.direction = randomDirection(walls, this);
+    }
+    this.x += this.direction.x;
+    this.y += this.direction.y;
+  }
+}
+
+function randomDirection(walls, entity) {
+  const options = [
+    {x:1,y:0}, {x:-1,y:0}, {x:0,y:1}, {x:0,y:-1}
+  ];
+  const valid = options.filter(d => canMove(entity.x + d.x, entity.y + d.y, walls));
+  if (valid.length) return valid[Math.floor(Math.random()*valid.length)];
+  return {x:0,y:0};
+}
+
+function canMove(x, y, walls) {
+  if (x < 0 || y < 0 || y >= walls.length || x >= walls[0].length) return false;
+  return !walls[y][x];
+}
+
+let walls = [];
+let pellets = [];
+let powerPellets = [];
+let ghosts = [];
+let pacman;
+
+function buildLevel() {
+  walls = [];
+  pellets = [];
+  powerPellets = [];
+  ghosts = [];
+  for (let y=0; y<LEVEL.length; y++) {
+    let wallRow = [];
+    let pelletRow = [];
+    for (let x=0; x<LEVEL[y].length; x++) {
+      const ch = LEVEL[y][x];
+      if (ch === '#') {
+        wallRow.push(true);
+      } else {
+        wallRow.push(false);
+      }
+      if (ch === '.') {
+        pelletRow.push(true);
+      } else {
+        pelletRow.push(false);
+      }
+      if (ch === 'o') {
+        powerPellets.push({x,y});
+      }
+      if (ch === '-') {
+        ghosts.push(new Ghost(x, y, 'red'));
+      }
+    }
+    walls.push(wallRow);
+    pellets.push(pelletRow);
+  }
+  if (ghosts.length) {
+    const start = ghosts.shift();
+    pacman = new Entity(start.x, start.y, 'yellow');
+  } else {
+    pacman = new Entity(1,1,'yellow');
+  }
+}
+
+function drawLevel() {
+  ctx.clearRect(0,0,WIDTH,HEIGHT);
+  for (let y=0; y<walls.length; y++) {
+    for (let x=0; x<walls[y].length; x++) {
+      if (walls[y][x]) {
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+      }
+      if (pellets[y][x]) {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(x*TILE_SIZE+TILE_SIZE/2-2, y*TILE_SIZE+TILE_SIZE/2-2, 4,4);
+      }
+    }
+  }
+  powerPellets.forEach(pp => {
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(pp.x*TILE_SIZE+TILE_SIZE/2, pp.y*TILE_SIZE+TILE_SIZE/2, 6, 0, Math.PI*2);
+    ctx.fill();
+  });
+}
+
+function update() {
+  if (pacman.nextDirection.x || pacman.nextDirection.y) {
+    if (canMove(pacman.x + pacman.nextDirection.x, pacman.y + pacman.nextDirection.y, walls)) {
+      pacman.direction = {...pacman.nextDirection};
+    }
+  }
+  if (canMove(pacman.x + pacman.direction.x, pacman.y + pacman.direction.y, walls)) {
+    pacman.x += pacman.direction.x;
+    pacman.y += pacman.direction.y;
+  }
+  ghosts.forEach(g => g.update(walls));
+
+  // pellet collision
+  if (pellets[pacman.y] && pellets[pacman.y][pacman.x]) {
+    pellets[pacman.y][pacman.x] = false;
+  }
+  powerPellets = powerPellets.filter(pp => !(pp.x === pacman.x && pp.y === pacman.y));
+
+  drawLevel();
+  powerPellets.forEach(pp => {}); // drawing already done in drawLevel
+  pacman.draw();
+  ghosts.forEach(g => g.draw());
+}
+
+let last = 0;
+function loop(timestamp) {
+  if (timestamp - last > 150) {
+    update();
+    last = timestamp;
+  }
+  requestAnimationFrame(loop);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowUp') pacman.nextDirection = {x:0,y:-1};
+  if (e.key === 'ArrowDown') pacman.nextDirection = {x:0,y:1};
+  if (e.key === 'ArrowLeft') pacman.nextDirection = {x:-1,y:0};
+  if (e.key === 'ArrowRight') pacman.nextDirection = {x:1,y:0};
+});
+
+buildLevel();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
