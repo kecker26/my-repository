@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS Didaktik Dashboard – Konzept</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f7fb;
+      --fg: #12121b;
+      --accent: #5b6dff;
+      --border: #d1d6e5;
+      --badge-bg: #eef1ff;
+      --pro-bg: #ffeacc;
+      --pro-fg: #a15b00;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 2rem clamp(1rem, 3vw, 4rem);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    header h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+    }
+
+    header p {
+      margin: 0;
+      max-width: 72ch;
+      color: #4a4f63;
+    }
+
+    main {
+      padding: 2rem clamp(1rem, 3vw, 4rem) 5rem;
+      display: grid;
+      gap: 2.5rem;
+    }
+
+    section {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: clamp(1.5rem, 2.5vw, 2.75rem);
+      box-shadow: 0 12px 32px rgba(26, 30, 55, 0.08);
+    }
+
+    section h2 {
+      margin-top: 0;
+      font-size: 1.6rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    h3 {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+    }
+
+    h4 {
+      margin-top: 1.5rem;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #585f77;
+    }
+
+    ul, ol {
+      margin: 0.75rem 0 0.75rem 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.35rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .grid.cols-2 {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    .grid.cols-3 {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.1rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: var(--badge-bg);
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-left: 0.5rem;
+    }
+
+    .badge.pro {
+      background: var(--pro-bg);
+      color: var(--pro-fg);
+    }
+
+    pre {
+      background: #0e172a;
+      color: #f5f7ff;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      overflow-x: auto;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    code {
+      background: rgba(91, 109, 255, 0.1);
+      border-radius: 6px;
+      padding: 0.15rem 0.35rem;
+      font-size: 0.95rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.65rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f4f6ff;
+    }
+
+    details {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      margin-top: 1rem;
+      background: #fafbff;
+    }
+
+    details summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .flex > div {
+      flex: 1 1 320px;
+    }
+
+    .callout {
+      background: rgba(91, 109, 255, 0.08);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-top: 1.25rem;
+    }
+
+    .checklist li {
+      margin-bottom: 0.6rem;
+    }
+
+    @media (max-width: 720px) {
+      header {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Interaktives CSS-Dashboard – UX/Frontend-Konzept</h1>
+    <p>
+      Ziel: Ein Single-File-fähiges Lern- &amp; Experimentier-Dashboard, das CSS-Eigenschaften
+      und Direktiven für Anfänger bis Fortgeschrittene didaktisch aufbereitet und in Echtzeit visualisiert.
+    </p>
+  </header>
+  <main>
+    <section id="zielgruppe">
+      <h2>1. Zielgruppe &amp; Lernziele</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>Zielgruppe</h3>
+          <ul>
+            <li>Studierende &amp; Quereinsteiger:innen, die CSS-Grundlagen lernen möchten.</li>
+            <li>Junior-Frontend-Entwickler:innen, die ihr CSS-Mentalmodell schärfen wollen.</li>
+            <li>Fortgeschrittene Professionals, die seltene Properties testen &amp; dokumentieren.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Lernziele</h3>
+          <ul>
+            <li>Wirkung &amp; Zusammenspiel gängiger CSS-Properties verstehen.</li>
+            <li>Kaskade, Vererbung, Spezifität &amp; Quellreihenfolge anhand interaktiver Beispiele begreifen.</li>
+            <li>Best Practices durch sofort kopierbare Snippets anwenden.</li>
+            <li>Fehlerquellen identifizieren &amp; Alternativen finden (z. B. fehlende Voraussetzungen).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="coverage">
+      <h2>2. Coverage – Kategorien &amp; Properties</h2>
+      <p>
+        Jede Kategorie enthält 10–30 repräsentative Properties plus 1–2 Direktiven. Optionale/fortgeschrittene Themen
+        sind mit einem <span class="badge pro">Pro</span>-Badge markiert.
+      </p>
+      <div class="grid cols-2">
+        <div>
+          <h3>Layout</h3>
+          <ul>
+            <li>display</li>
+            <li>position</li>
+            <li>top / right / bottom / left</li>
+            <li>inset</li>
+            <li>z-index</li>
+            <li>float</li>
+            <li>clear</li>
+            <li>overflow / overflow-x / overflow-y</li>
+            <li>visibility</li>
+            <li>contain <span class="badge pro">Pro</span></li>
+            <li>@page <span class="badge pro">Pro</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Box Model</h3>
+          <ul>
+            <li>width / min-width / max-width</li>
+            <li>height / min-height / max-height</li>
+            <li>box-sizing</li>
+            <li>margin (+-top/right/bottom/left)</li>
+            <li>padding (+-top/right/bottom/left)</li>
+            <li>border (style/width/color)</li>
+            <li>outline</li>
+            <li>border-image <span class="badge pro">Pro</span></li>
+            <li>aspect-ratio</li>
+            <li>object-fit</li>
+            <li>@property <span class="badge pro">Pro</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Flexbox</h3>
+          <ul>
+            <li>display: flex / inline-flex</li>
+            <li>flex-direction</li>
+            <li>flex-wrap</li>
+            <li>justify-content</li>
+            <li>align-items</li>
+            <li>align-content</li>
+            <li>gap / row-gap / column-gap</li>
+            <li>flex</li>
+            <li>flex-grow</li>
+            <li>flex-shrink</li>
+            <li>flex-basis</li>
+            <li>order</li>
+            <li>place-content</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Grid</h3>
+          <ul>
+            <li>display: grid / inline-grid</li>
+            <li>grid-template-rows</li>
+            <li>grid-template-columns</li>
+            <li>grid-template-areas</li>
+            <li>grid-auto-rows / grid-auto-columns</li>
+            <li>grid-auto-flow</li>
+            <li>grid-column / grid-row</li>
+            <li>justify-items / align-items</li>
+            <li>justify-content / align-content</li>
+            <li>place-items / place-content</li>
+            <li>gap / row-gap / column-gap</li>
+            <li>minmax()</li>
+            <li>repeat()</li>
+            <li>subgrid <span class="badge pro">Pro</span></li>
+            <li>@supports</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Typografie</h3>
+          <ul>
+            <li>font-family</li>
+            <li>font-size (px / rem / clamp())</li>
+            <li>line-height</li>
+            <li>font-weight</li>
+            <li>font-style</li>
+            <li>font-variant <span class="badge pro">Pro</span></li>
+            <li>letter-spacing</li>
+            <li>word-spacing</li>
+            <li>text-align</li>
+            <li>text-transform</li>
+            <li>text-decoration</li>
+            <li>text-shadow</li>
+            <li>white-space</li>
+            <li>@font-face</li>
+            <li>font-display</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Farbe &amp; Hintergrund</h3>
+          <ul>
+            <li>color</li>
+            <li>background-color</li>
+            <li>background-image</li>
+            <li>background-size</li>
+            <li>background-position</li>
+            <li>background-repeat</li>
+            <li>background-attachment</li>
+            <li>background-clip</li>
+            <li>background-origin</li>
+            <li>linear-gradient()</li>
+            <li>radial-gradient()</li>
+            <li>conic-gradient() <span class="badge pro">Pro</span></li>
+            <li>multiple backgrounds</li>
+            <li>mask-image <span class="badge pro">Pro</span></li>
+            <li>@color-profile <span class="badge pro">Pro</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Dekoration &amp; Effekte</h3>
+          <ul>
+            <li>border-radius</li>
+            <li>border-style</li>
+            <li>box-shadow</li>
+            <li>text-shadow</li>
+            <li>filter</li>
+            <li>backdrop-filter <span class="badge pro">Pro</span></li>
+            <li>mix-blend-mode <span class="badge pro">Pro</span></li>
+            <li>opacity</li>
+            <li>outline-offset</li>
+            <li>clip-path <span class="badge pro">Pro</span></li>
+            <li>mask-mode <span class="badge pro">Pro</span></li>
+            <li>cursor</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Transform, Transition &amp; Animation</h3>
+          <ul>
+            <li>transform</li>
+            <li>transform-origin</li>
+            <li>transform-style <span class="badge pro">Pro</span></li>
+            <li>perspective</li>
+            <li>transition-property</li>
+            <li>transition-duration</li>
+            <li>transition-timing-function</li>
+            <li>transition-delay</li>
+            <li>@keyframes</li>
+            <li>animation-name</li>
+            <li>animation-duration</li>
+            <li>animation-iteration-count</li>
+            <li>animation-direction</li>
+            <li>animation-play-state</li>
+            <li>animation-fill-mode</li>
+            <li>scroll-timeline <span class="badge pro">Pro</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Listen &amp; Tabellen</h3>
+          <ul>
+            <li>list-style-type</li>
+            <li>list-style-position</li>
+            <li>list-style-image</li>
+            <li>counter-reset <span class="badge pro">Pro</span></li>
+            <li>counter-increment <span class="badge pro">Pro</span></li>
+            <li>table-layout</li>
+            <li>border-collapse</li>
+            <li>border-spacing</li>
+            <li>caption-side</li>
+            <li>empty-cells</li>
+            <li>vertical-align</li>
+            <li>::marker</li>
+            <li>::selection <span class="badge pro">Pro</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Selektoren &amp; Pseudoklassen</h3>
+          <ul>
+            <li>.class</li>
+            <li>#id</li>
+            <li>[attribute]</li>
+            <li>:hover</li>
+            <li>:focus</li>
+            <li>:active</li>
+            <li>:disabled</li>
+            <li>:is()</li>
+            <li>:has() <span class="badge pro">Pro</span></li>
+            <li>:where() <span class="badge pro">Pro</span></li>
+            <li>::before</li>
+            <li>::after</li>
+            <li>::marker</li>
+            <li>::selection <span class="badge pro">Pro</span></li>
+            <li>:nth-child()</li>
+            <li>:not()</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Responsive &amp; Logik</h3>
+          <ul>
+            <li>@media (width)</li>
+            <li>@media (prefers-color-scheme)</li>
+            <li>@media (prefers-reduced-motion)</li>
+            <li>@supports</li>
+            <li>container-type</li>
+            <li>container-name</li>
+            <li>@container</li>
+            <li>clamp()</li>
+            <li>min()</li>
+            <li>max()</li>
+            <li>env()</li>
+            <li>prefers-contrast <span class="badge pro">Pro</span></li>
+            <li>size-adjust <span class="badge pro">Pro</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Variablen &amp; Funktionen</h3>
+          <ul>
+            <li>--custom-property</li>
+            <li>var()</li>
+            <li>calc()</li>
+            <li>clamp()</li>
+            <li>min()</li>
+            <li>max()</li>
+            <li>env()</li>
+            <li>@property <span class="badge pro">Pro</span></li>
+            <li>color-mix() <span class="badge pro">Pro</span></li>
+            <li>toggle() <span class="badge pro">Pro</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Kaskade &amp; Layer</h3>
+          <ul>
+            <li>:root</li>
+            <li>inherit</li>
+            <li>initial</li>
+            <li>unset</li>
+            <li>revert</li>
+            <li>@layer <span class="badge pro">Pro</span></li>
+            <li>@import</li>
+            <li>cascade-layer order <span class="badge pro">Pro</span></li>
+            <li>specificity calculation</li>
+            <li>important!</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="information-architecture">
+      <h2>3. Informationsarchitektur &amp; Navigation</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>Linke Seitenleiste</h3>
+          <ul>
+            <li>Kategorienbaum (Accordion) mit Suchfeld.</li>
+            <li>Filterchips: „Nur Basics“, „Alles“, „Nur Pro“.</li>
+            <li>Suchalgorithmen: Fuzzy Match, Kategorie-Gewichtung.</li>
+            <li>Favoritenbereich (per Drag &amp; Drop in Seitenleiste anheftbar).</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Hauptbereich (Desktop)</h3>
+          <p>3 Spalten, responsiv auf 1–2 Spalten:</p>
+          <ol>
+            <li><strong>Property-Panel</strong>: dynamische Controls inkl. Docs.</li>
+            <li><strong>Code-Panel</strong>: generiertes CSS mit Copy-CTA.</li>
+            <li><strong>Live-Vorschau</strong>: Sandbox mit Tabs.</li>
+          </ol>
+        </div>
+      </div>
+      <h3>Toolbar (Top)</h3>
+      <ul>
+        <li>Buttons: Reset, Undo, Redo, Dark/Light Toggle.</li>
+        <li>Toggle: „Nur geänderte Eigenschaften“.</li>
+        <li>Preset-Dropdown (Flex-Center etc.).</li>
+        <li>Export-Menü: HTML/CSS herunterladen.</li>
+      </ul>
+    </section>
+
+    <section id="wireframes">
+      <h2>4. Sitemap &amp; Wireframes</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>Sitemap</h3>
+          <ul>
+            <li>Dashboard
+              <ul>
+                <li>Start (Intro &amp; Quick Presets)</li>
+                <li>Kategorien (Sidebar Navigation)
+                  <ul>
+                    <li>Layout</li>
+                    <li>Box Model</li>
+                    <li>Flexbox</li>
+                    <li>…</li>
+                  </ul>
+                </li>
+                <li>Presets &amp; Vorlagen</li>
+                <li>Lernressourcen (Glossar, Cheatsheets)</li>
+                <li>Einstellungen (Sprache, Reset, Datenexport)</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3>Wireframe Desktop (3 Spalten)</h3>
+          <pre>
+┌─────────────────────────────────────────────────────────┐
+│ Toolbar: Reset | Undo/Redo | Mode | Presets | Export    │
+├───────────────┬─────────────────┬───────────────────────┤
+│ Sidebar        │ Property-Panel  │ Live-Vorschau        │
+│ - Suche        │ - Tabs: Basics  │ - Tabs: Text/Card... │
+│ - Kategorien   │ - Controls      │ - Split View Toggle  │
+│ - Filterchips  │ - Hinweise      │ - Inspector Overlay  │
+│                │                 │                       │
+├───────────────┴─────────────────┤ Code-Panel (Bottom)   │
+│ Responsive: Code-Panel klappt als Drawer aus            │
+└─────────────────────────────────────────────────────────┘
+          </pre>
+        </div>
+      </div>
+      <div class="grid cols-2">
+        <div>
+          <h3>Wireframe Tablet (2 Spalten)</h3>
+          <pre>
+┌──────────────────────────────────────┐
+│ Toolbar                              │
+├───────────────┬──────────────────────┤
+│ Sidebar       │ Property-Panel       │
+├───────────────┴──────────────────────┤
+│ Live-Vorschau (Tabs)                 │
+├──────────────────────────────────────┤
+│ Code-Panel (Collapsible)             │
+└──────────────────────────────────────┘
+          </pre>
+        </div>
+        <div>
+          <h3>Wireframe Mobile (Stack)</h3>
+          <pre>
+┌───────────────────────────────┐
+│ Toolbar (Hamburger für Menü)  │
+├───────────────────────────────┤
+│ Sidebar als Overlay           │
+├───────────────────────────────┤
+│ Property-Panel Accordion      │
+├───────────────────────────────┤
+│ Live-Vorschau (Swipe Tabs)    │
+├───────────────────────────────┤
+│ Code-Panel Toggle             │
+└───────────────────────────────┘
+          </pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="preview-didactics">
+      <h2>5. Live-Vorschau &amp; Didaktik</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>Sandbox-DOM</h3>
+          <ul>
+            <li>Tabs: Text, Card, Grid, Form, Table, Hero, Artikel.</li>
+            <li>Jede Komponente mit semantischem HTML &amp; ARIA.</li>
+            <li>Before/After-Slider für Vorher/Nachher.</li>
+            <li>Overlay zeigt geänderte Nodes, Tooltips mit computed styles.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Didaktische Features</h3>
+          <ul>
+            <li>Konflikt-Hinweise (z. B. Hinweis bei fehlendem Flex-Container).</li>
+            <li>Specificity-Inspector mit Visualisierung der Layer &amp; Prioritäten.</li>
+            <li>Merksätze &amp; Mini-Übungen in Sidebar (z. B. „Positioniere das Badge…“).</li>
+            <li>Copyable Snippets mit Option „Nur geänderte Regeln“.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="interaktionen">
+      <h2>6. Interaktion &amp; UX-Details</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>Direkte Manipulation</h3>
+          <ul>
+            <li>Drag-Handles in Vorschau für Margin/Padding (Snapping 4px / 0.25rem).</li>
+            <li>Farbrad + eyedropper (wenn verfügbar).</li>
+            <li>Einheiten-Dropdown (px, rem, %, vw/vh, fr, deg).</li>
+            <li>Slider mit konfigurierbaren Steps &amp; Constraints.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Produktivität</h3>
+          <ul>
+            <li>Undo/Redo (Ctrl/Cmd+Z/Y).</li>
+            <li>Code kopieren (Ctrl/Cmd+C).</li>
+            <li>Kurzhilfe (F1) mit Tastenkürzel-Overlay.</li>
+            <li>Suche (/) fokussiert Sidebar-Input.</li>
+            <li>LocalStorage: Session-Persistenz, Custom Presets.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">
+        <strong>Snapping &amp; Constraints:</strong> Validierung im PropertyModel verhindert unsinnige Werte,
+        UIControls bieten Quick-Buttons für Standardwerte (0, auto, 100%).
+      </div>
+    </section>
+
+    <section id="technik">
+      <h2>7. Technische Leitplanken</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>Architektur (Modules)</h3>
+          <ul>
+            <li><strong>PropertyModel</strong>: JSON-Definitionen, Validierung, Abhängigkeiten.</li>
+            <li><strong>StateStore</strong>: zentraler Zustand, History, Undo/Redo-Stack.</li>
+            <li><strong>UIControls</strong>: Rendert Controls aus Schema, Event-Bindings.</li>
+            <li><strong>CodeGen</strong>: Generiert CSS (Inline, Scoped, Global) + Formatierung.</li>
+            <li><strong>PreviewSandbox</strong>: Shadow DOM oder iFrame, Synchronisation, Overlays.</li>
+            <li><strong>Inspector</strong>: computed styles, Specificity-Berechnung, Konflikt-Hinweise.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Technik &amp; Performance</h3>
+          <ul>
+            <li>Reines HTML/CSS/JS (ES6 Modules), keine Bundler.</li>
+            <li>Batch-DOM-Updates via <code>requestAnimationFrame</code>.</li>
+            <li>Eingaben mit Debounce, differenzielle Updates.</li>
+            <li>i18n: Texte in JSON (de/en), UI reagiert live auf Sprachwechsel.</li>
+            <li>A11y: ARIA-Labels, Fokus-Traps, High-Contrast-Mode, Respekt vor <code>prefers-reduced-motion</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="data-model">
+      <h2>8. Datenmodell &amp; Beispiele</h2>
+      <p>Beispiel-Schema für drei Kategorien (Typografie, Flexbox, Grid). JSON kann direkt im PropertyModel verwendet werden.</p>
+      <pre>
+{
+  "typography": [
+    {
+      "name": "font-size",
+      "type": "length",
+      "units": ["px", "rem", "em", "%"],
+      "range": { "min": 10, "max": 72, "step": 1 },
+      "default": "16px",
+      "examples": ["16px", "1rem", "clamp(1rem, 2vw + .5rem, 1.5rem)"],
+      "doc": "Basisschriftgröße; beeinflusst Em-basierte Maße.",
+      "requires": [],
+      "shorthandOf": null,
+      "longhands": [],
+      "conflictsWith": [],
+      "category": "Typografie"
+    }
+  ],
+  "flexbox": [
+    {
+      "name": "justify-content",
+      "type": "enum",
+      "values": ["flex-start", "center", "space-between", "space-around", "space-evenly"],
+      "default": "flex-start",
+      "requires": [{ "property": "display", "value": "flex" }],
+      "doc": "Steuert horizontale Ausrichtung im Hauptachsen-Kontext.",
+      "examples": ["center", "space-between"],
+      "category": "Flexbox"
+    },
+    {
+      "name": "flex",
+      "type": "shorthand",
+      "longhands": ["flex-grow", "flex-shrink", "flex-basis"],
+      "default": "0 1 auto",
+      "doc": "Shorthand zur Steuerung der Flex-Item-Größe.",
+      "category": "Flexbox"
+    }
+  ],
+  "grid": [
+    {
+      "name": "grid-template-columns",
+      "type": "grid-track",
+      "values": ["auto", "minmax()", "repeat()", "1fr"],
+      "default": "none",
+      "doc": "Definiert Spaltenstruktur; nutzt Helfer wie repeat und minmax.",
+      "examples": ["repeat(2, 1fr)", "minmax(150px, 1fr)"],
+      "category": "Grid"
+    },
+    {
+      "name": "gap",
+      "type": "length",
+      "units": ["px", "rem", "%"],
+      "range": { "min": 0, "max": 64, "step": 4 },
+      "default": "0px",
+      "doc": "Abstand zwischen Grid-/Flex-Zellen.",
+      "category": "Grid"
+    }
+  ]
+}
+      </pre>
+    </section>
+
+    <section id="state-diagram">
+      <h2>9. State-Diagramm &amp; Event-Flow</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>State-Diagramm (vereinfacht)</h3>
+          <pre>
+┌──────────────┐   User Input   ┌──────────────┐
+│ UIControls   │ ─────────────▶ │ StateStore   │
+└──────┬───────┘                └──────┬───────┘
+       │                              │
+       │ Render Updates               │ Notify
+       ▼                              ▼
+┌──────────────┐   Generate CSS  ┌──────────────┐
+│ Preview      │ ◀────────────── │ CodeGen      │
+└──────┬───────┘                 └──────┬───────┘
+       │ Inspector Feedback            │ History
+       ▼                               ▼
+┌──────────────┐                 ┌──────────────┐
+│ Inspector    │◀───────────────▶│ Undo/Redo    │
+└──────────────┘                 └──────────────┘
+          </pre>
+        </div>
+        <div>
+          <h3>Event-Flow (Schritte)</h3>
+          <ol>
+            <li>Nutzer:in ändert Control → UIControls validiert Input (PropertyModel).</li>
+            <li>StateStore aktualisiert Zustand, schreibt History-Eintrag.</li>
+            <li>CodeGen erzeugt differenzielles CSS (gewählte Output-Variante).</li>
+            <li>PreviewSandbox injiziert Styles, Inspector misst Wirkung.</li>
+            <li>Inspector liefert Konflikt-/Hinweis-Events zurück (Overlay, Toast).</li>
+            <li>Toolbar &amp; Sidebar aktualisieren „geänderte Eigenschaften“ &amp; Preset-Status.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="components">
+      <h2>10. Komponentenliste</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Komponente</th>
+            <th>Props / Daten</th>
+            <th>Events</th>
+            <th>Beschreibung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SidebarTree</td>
+            <td>categories, filterMode, searchQuery</td>
+            <td>onSelectCategory, onSearch, onToggleFilter</td>
+            <td>Kategorienavigation, Suche &amp; Filterchips.</td>
+          </tr>
+          <tr>
+            <td>Toolbar</td>
+            <td>theme, undoAvailable, redoAvailable, presets</td>
+            <td>onReset, onUndo, onRedo, onToggleTheme, onSelectPreset, onExport</td>
+            <td>Globale Steuerung &amp; Shortcuts.</td>
+          </tr>
+          <tr>
+            <td>PropertyPanel</td>
+            <td>selectedProperties, locale, showOnlyChanged</td>
+            <td>onPropertyChange, onUnitChange, onToggleAdvanced</td>
+            <td>Generiert Controls &amp; Didaktik-Bausteine.</td>
+          </tr>
+          <tr>
+            <td>CodePanel</td>
+            <td>cssText, mode (inline|scoped|global), changedOnly</td>
+            <td>onCopyCode, onModeChange, onToggleChangedOnly</td>
+            <td>Zeigt und exportiert CSS.</td>
+          </tr>
+          <tr>
+            <td>PreviewTabs</td>
+            <td>scenarios, activeScenario, beforeAfterEnabled</td>
+            <td>onSelectScenario, onToggleBeforeAfter, onInspectNode</td>
+            <td>Sandbox mit Tabs &amp; Split View.</td>
+          </tr>
+          <tr>
+            <td>InspectorOverlay</td>
+            <td>activeNode, computedStyles, specificityInfo</td>
+            <td>onHighlightNode, onShowConflicts</td>
+            <td>Visualisiert Änderungen &amp; Konflikte.</td>
+          </tr>
+          <tr>
+            <td>PresetManager</td>
+            <td>presetList, userPresets</td>
+            <td>onApplyPreset, onSavePreset, onDeletePreset</td>
+            <td>Verwaltet vordefinierte &amp; eigene Presets.</td>
+          </tr>
+          <tr>
+            <td>IntlSwitcher</td>
+            <td>locales, activeLocale</td>
+            <td>onChangeLocale</td>
+            <td>Sprachumschalter (de/en).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="didactics">
+      <h2>11. Didaktische Hinweise je Kategorie</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>Layout</h3>
+          <ul>
+            <li>Merksatz: Layout-Properties wirken oft nur bei passenden Display-Typen.</li>
+            <li>Übung: Positioniere ein Badge absolut und setze <code>position: relative</code> am Container.</li>
+            <li>Warnung: <code>z-index</code> benötigt Stacking Context (z. B. Positionierung).</li>
+          </ul>
+          <h3>Flexbox</h3>
+          <ul>
+            <li>Merksatz: „Flex-Kinder hören nur, wenn Eltern flexen.“</li>
+            <li>Übung: Erzeuge zentriertes Layout (Preset Flex-Center).</li>
+            <li>Hinweis: <code>flex-basis</code> überschreibt <code>width</code>.</li>
+          </ul>
+          <h3>Grid</h3>
+          <ul>
+            <li>Merksatz: Tracks zuerst planen, dann Areas benennen.</li>
+            <li>Übung: Baue 2-Spalten-Grid mit <code>repeat</code> &amp; <code>minmax</code>.</li>
+            <li>Warnung: <code>justify-content</code> vs. <code>justify-items</code> unterscheiden.</li>
+          </ul>
+          <h3>Typografie</h3>
+          <ul>
+            <li>Merksatz: <code>line-height</code> ohne Einheit bevorzugen (Skalierung).</li>
+            <li>Übung: Stelle responsive Typo mit <code>clamp()</code> ein.</li>
+            <li>Warnung: <code>font-size</code> beeinflusst Rem-basierte Abstände.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Farbe &amp; Hintergrund</h3>
+          <ul>
+            <li>Merksatz: Mehrere Background-Layer werden von oben nach unten gerendert.</li>
+            <li>Übung: Kombiniere Verlauf + Bild mit <code>background-blend-mode</code> <span class="badge pro">Pro</span>.</li>
+            <li>Warnung: Transparente Farben beeinflussen Kontrast (A11y-Check).</li>
+          </ul>
+          <h3>Dekoration &amp; Effekte</h3>
+          <ul>
+            <li>Merksatz: Shadows nutzen rgba für weiche Kanten.</li>
+            <li>Übung: Card-Schatten-Preset anwenden &amp; variieren.</li>
+            <li>Warnung: Viele Filter können Performance kosten.</li>
+          </ul>
+          <h3>Responsive &amp; Logik</h3>
+          <ul>
+            <li>Merksatz: Mobile First – min-width Media Queries bevorzugen.</li>
+            <li>Übung: Container Query aktivieren und Komponenten innerhalb testen.</li>
+            <li>Warnung: @supports fallback definieren (z. B. <code>display: block</code>).</li>
+          </ul>
+          <h3>Kaskade &amp; Layer</h3>
+          <ul>
+            <li>Merksatz: Spezifität gewinnt, bei Gleichstand entscheidet Source Order.</li>
+            <li>Übung: Layer-Hierarchie visualisieren &amp; Prioritäten ändern.</li>
+            <li>Warnung: <code>!important</code> sparsam einsetzen, Inspector zeigt Alternativen.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="mvp">
+      <h2>12. MVP-Scope vs. Erweiterungen</h2>
+      <div class="grid cols-2">
+        <div>
+          <h3>MVP (Basis)</h3>
+          <ul>
+            <li>Sidebar mit Kategorien, Suche, Filter „Basics“.</li>
+            <li>Property-Panel mit Kern-Properties jeder Kategorie.</li>
+            <li>Code-Panel (Inline/Scoped/Global) &amp; Copy-Button.</li>
+            <li>Live-Vorschau (Text, Card, Grid), Undo/Redo, Reset.</li>
+            <li>Preset-Auswahl (Flex-Center, 2-Spalten-Grid, Card-Schatten).</li>
+            <li>LocalStorage: letzte Session speichern.</li>
+            <li>Inspector mit Highlight &amp; Konflikt-Hinweisen (Basis).</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Erweiterungen <span class="badge pro">Pro</span></h3>
+          <ul>
+            <li>Before/After-Split View &amp; Visual Diff.</li>
+            <li>Specificity-Graph &amp; Cascade-Layer-Editor.</li>
+            <li>Container-Query Playground mit multiplen Containern.</li>
+            <li>Animation Timeline &amp; Scroll-Linked Animations.</li>
+            <li>Export als Zip (HTML, CSS, JSON Presets).</li>
+            <li>Team-Sharing via URL-Hash / JSON Export.</li>
+            <li>Guided Challenges &amp; Schritt-für-Schritt-Lösungen.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="edge-cases">
+      <h2>13. Edge-Cases &amp; Lernfallen</h2>
+      <ul>
+        <li>Shorthands vs. Longhands: UI warnt vor Überschreibung (z. B. <code>margin</code> setzt Einzelwerte zurück).</li>
+        <li>Unwirksame Werte: Tooltip erklärt „line-height: normal“ vs. numerischer Wert.</li>
+        <li>Stacking Context: Visual Layer zeigt neue Kontexte (transform, opacity &lt; 1).</li>
+        <li>Containment &amp; Container Queries: Zwei Container mit gleichem Component-Template zum Vergleich.</li>
+        <li>Fallbacks: Mehrere <code>@font-face</code>-Quellen, Background-Layer, Font-Stacks.</li>
+        <li>Cross-Property-Konflikte (z. B. <code>overflow:hidden</code> + Schatten) mit Warnhinweis.</li>
+      </ul>
+    </section>
+
+    <section id="presets">
+      <h2>14. Testfälle &amp; Presets</h2>
+      <ul>
+        <li><strong>Flex-Center:</strong> <code>display:flex; justify-content:center; align-items:center;</code></li>
+        <li><strong>2-Spalten-Grid:</strong> <code>grid-template-columns: repeat(2, 1fr); gap: 1rem;</code></li>
+        <li><strong>Responsive Typo:</strong> <code>font-size: clamp(1rem, 2vw + 0.5rem, 1.5rem);</code></li>
+        <li><strong>Card-Schatten:</strong> <code>border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.15);</code></li>
+        <li><strong>Overlay-Badge:</strong> <code>position:absolute; inset:auto 8px 8px auto;</code></li>
+        <li><strong>Hero Gradient <span class="badge pro">Pro</span>:</strong> Layered background mit radial &amp; linear gradient.</li>
+        <li><strong>Table Zebra:</strong> <code>:nth-child(even)</code> &amp; <code>background-color</code>.</li>
+        <li><strong>Animation Pulse:</strong> <code>@keyframes</code> + <code>animation-iteration-count: infinite;</code></li>
+      </ul>
+    </section>
+
+    <section id="output">
+      <h2>15. Output-Erwartung</h2>
+      <ul>
+        <li>Umsetzbares Dashboard (Single-File optional) mit oben definierten Modulen.</li>
+        <li>Sitemaps &amp; Wireframes (siehe Abschnitt 4).</li>
+        <li>Komponentenliste mit Props/Events (Abschnitt 10).</li>
+        <li>Property-Schema Beispiele (Abschnitt 8).</li>
+        <li>State-Diagramm &amp; Event-Flow (Abschnitt 9).</li>
+        <li>Didaktische Hinweise (Abschnitt 11).</li>
+        <li>MVP &amp; Erweiterungen (Abschnitt 12).</li>
+      </ul>
+    </section>
+
+    <section id="acceptance">
+      <h2>16. Akzeptanzkriterien</h2>
+      <ol class="checklist">
+        <li>Alle Kategorien inkl. Properties &amp; Direktiven abgedeckt, Pro-Themen markiert.</li>
+        <li>Navigation: Sidebar + Toolbar + 3-Spalten-Hauptbereich konzeptionell beschrieben.</li>
+        <li>Live-Vorschau beschreibt Sandbox, Overlays, Konflikt-Hinweise &amp; Before/After.</li>
+        <li>Interaktion: Regler, Dropdowns, Farbwahl, Shortcuts, Snapping dokumentiert.</li>
+        <li>Technische Architektur: Module, Performance, A11y, i18n.</li>
+        <li>Datenmodell: JSON-Beispiele für mind. drei Kategorien.</li>
+        <li>State-Diagramm &amp; Event-Flow vorhanden.</li>
+        <li>Komponentenliste inkl. Props &amp; Events erstellt.</li>
+        <li>Didaktik: pro Kategorie Hinweise &amp; Übungen.</li>
+        <li>MVP vs. Pro-Features klar getrennt.</li>
+        <li>Edge-Cases, Presets/Testfälle aufgeführt.</li>
+        <li>Single-File-Umsetzung möglich (keine externen Abhängigkeiten erforderlich).</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>
